@@ -73,12 +73,20 @@ a predictable key.
 Before deploying, confirm the app talks to the real database:
 
 ```bash
-cd ~/Downloads/triptogether
 cp .env.example .env.local
-# edit .env.local: set DATABASE_URL and TRIPTOGETHER_SECRET
-npm run db:seed    # creates the two demo trips in Supabase
-npx next dev       # note: not `npm run dev`, which would re-push the schema
+./scripts/set-db-password.sh   # prompts for the connection string, nothing echoed
+npm run db:seed                # creates the two demo trips in Supabase
+npx next dev                   # not `npm run dev`, which would re-push the schema
 ```
+
+`set-db-password.sh` takes either a whole connection string or a bare password,
+percent-encodes characters like `#` and `@` that would otherwise break the URL,
+and refuses the `[YOUR-PASSWORD]` placeholder rather than saving something broken.
+Paste at its `>` prompt, not at the shell prompt.
+
+Note that `db:seed` and `db:push` load `.env.local` explicitly via
+`--env-file-if-exists`. Next.js reads it automatically; standalone CLI scripts do
+not, and without it they would quietly write to the local database instead.
 
 If the demo trips load, the wiring is correct.
 

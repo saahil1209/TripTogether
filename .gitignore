@@ -19,3 +19,6 @@ e2e.db-wal
 /drizzle/meta/_journal.json.bak
 triptogether.db-shm
 triptogether.db-wal
+.env*.local
+.env.local*
+.DS_Store
