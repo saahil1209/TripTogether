@@ -1,0 +1,92 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Warm paper, deep navy ink. Not a dashboard. */
+  --color-paper: #faf6f0;
+  --color-paper-deep: #f2ece3;
+  --color-card: #ffffff;
+  --color-ink: #16233f;
+  --color-ink-soft: #46506a;
+  --color-ink-muted: #6f7890;
+  --color-line: #e7dfd3;
+  --color-line-soft: #f0e9de;
+
+  --color-emerald: #0e7a63;
+  --color-emerald-soft: #e3f1ec;
+  --color-emerald-deep: #0a5b4a;
+  --color-amber: #9a6410;
+  --color-amber-soft: #fbf0dd;
+  --color-clay: #a8403a;
+  --color-clay-soft: #fbe8e5;
+  --color-sky: #2a5d8f;
+  --color-sky-soft: #e6eef6;
+
+  --font-display: ui-serif, Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --radius-card: 1rem;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-paper);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+  }
+
+  /* One visible, consistent focus ring everywhere. */
+  :focus-visible {
+    outline: 2px solid var(--color-emerald);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-emerald-soft);
+  }
+}
+
+@layer utilities {
+  .rise {
+    animation: rise 0.4s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .fade {
+    animation: fade 0.25s ease-out both;
+  }
+
+  @keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
