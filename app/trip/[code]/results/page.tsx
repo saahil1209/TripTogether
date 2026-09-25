@@ -1,5 +1,6 @@
 import { ArrowRight, Lock } from 'lucide-react'
 import Link from 'next/link'
+import { AvailabilityBoard } from '@/components/availability-board'
 import { GroupSummary, WhyNotList } from '@/components/group-summary'
 import { InvalidLink } from '@/components/invalid-link'
 import { OptionCard } from '@/components/option-card'
@@ -9,6 +10,7 @@ import { Card, CardBody } from '@/components/ui/card'
 import { Wordmark } from '@/components/wordmark'
 import { formatRange } from '@/lib/dates'
 import { joinNames } from '@/lib/format'
+import { groupStats } from '@/lib/stats'
 import { currentParticipantId } from '@/lib/session'
 import { loadTripByInvite, missingNames, recommendationFor, submittedResponses } from '@/lib/trips'
 
@@ -66,6 +68,14 @@ export default async function ResultsPage({ params }: { params: Promise<{ code: 
 
   const recommendation = recommendationFor(state)
   const you = participantId
+  const stats = groupStats(
+    responded,
+    state.participants.length,
+    trip.windowStart,
+    trip.windowEnd,
+  )
+  // Outline whichever option is leading, so the calendar has a reference point.
+  const best = recommendation.options[0]
 
   return (
     <Shell tripName={trip.name}>
@@ -99,6 +109,15 @@ export default async function ResultsPage({ params }: { params: Promise<{ code: 
           ))}
 
           <WhyNotList items={recommendation.whyNot} />
+
+          {/* Safe here: results are published, so everyone has already answered
+              and there is nothing left to anchor. */}
+          <AvailabilityBoard
+            coverage={stats.coverage}
+            availability={stats.availability}
+            chosen={best ? { start: best.start, end: best.end } : null}
+            context="published"
+          />
 
           <Card>
             <CardBody className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">

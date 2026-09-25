@@ -16,12 +16,16 @@ export function AvailabilityBoard({
   coverage,
   availability,
   chosen,
+  context = 'decided',
 }: {
   coverage: DayCoverage[]
   availability: PersonAvailability[]
-  /** The decided window, outlined on the calendar. */
+  /** The window to outline on the calendar. */
   chosen?: { start: ISODate; end: ISODate } | null
+  /** Changes the copy: a locked decision reads differently from a shortlist. */
+  context?: 'decided' | 'published'
 }) {
+  const decided = context === 'decided'
   const months = new Map<string, DayCoverage[]>()
   for (const day of coverage) {
     const key = day.date.slice(0, 7)
@@ -40,8 +44,10 @@ export function AvailabilityBoard({
         <div>
           <h2 className="text-xl">When everyone could travel</h2>
           <p className="mt-1 text-ink-soft">
-            Now that it&rsquo;s decided, here is what everybody actually said. Darker means more
-            people free.
+            {decided
+              ? 'Now that it\u2019s decided, here is what everybody actually said.'
+              : 'Everyone has answered, so here is the full picture.'}{' '}
+            Darker means more people free.
           </p>
         </div>
 
@@ -81,7 +87,9 @@ export function AvailabilityBoard({
                       </span>
                       <span className="sr-only">
                         {day.free} of {day.total} people free
-                        {inChosen(day.date) ? ', part of the chosen trip' : ''}
+                        {inChosen(day.date)
+                          ? decided ? ', part of the chosen trip' : ', part of the leading option'
+                          : ''}
                       </span>
                     </div>
                   ))}
@@ -102,7 +110,7 @@ export function AvailabilityBoard({
           {chosen ? (
             <span className="inline-flex items-center gap-1.5">
               <span className="size-3.5 rounded border border-line ring-2 ring-ink ring-offset-1" />
-              the trip
+              {decided ? 'the trip' : 'the leading option'}
             </span>
           ) : null}
         </div>
@@ -124,7 +132,9 @@ export function AvailabilityBoard({
           </ul>
           {chosen ? (
             <p className="mt-3 text-sm text-ink-muted">
-              The trip runs {formatRange(chosen.start, chosen.end)}.
+              {decided
+                ? `The trip runs ${formatRange(chosen.start, chosen.end)}.`
+                : `The leading option runs ${formatRange(chosen.start, chosen.end)}.`}
             </p>
           ) : null}
         </div>

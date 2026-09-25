@@ -152,6 +152,10 @@ test('a group goes from an empty form to one locked decision', async ({ page, br
   }
   await expect(karan.page.getByRole('heading', { name: 'For you' }).first()).toBeVisible()
 
+  // Availability becomes public at publication, described as a shortlist.
+  await expect(karan.page.getByRole('heading', { name: 'When everyone could travel' })).toBeVisible()
+  await expect(karan.page.getByText(/The leading option runs/)).toBeVisible()
+
   /* ------------------------------------------------------ everyone reacts --- */
   const decideUrl = inviteUrl.replace('/join/', '/trip/') + '/decide'
   await karan.page.goto(decideUrl)
