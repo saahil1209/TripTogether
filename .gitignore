@@ -22,3 +22,4 @@ triptogether.db-wal
 .env*.local
 .env.local*
 .DS_Store
+.env*
