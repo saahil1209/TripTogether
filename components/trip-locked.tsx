@@ -4,6 +4,8 @@ import { Check } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useOptimistic, useTransition } from 'react'
 import { setTaskDoneAction, setTaskOwnerAction } from '@/app/actions'
+import { AnswerStats } from '@/components/answer-stats'
+import { AvailabilityBoard } from '@/components/availability-board'
 import { CopyButton } from '@/components/copy-button'
 import { AlignmentMatrix } from '@/components/alignment-matrix'
 import { Card, CardBody, SectionTitle } from '@/components/ui/card'
@@ -11,6 +13,7 @@ import { cn } from '@/lib/cn'
 import { formatRange } from '@/lib/dates'
 import { rupees } from '@/lib/format'
 import type { TripOption } from '@/lib/recommendations'
+import type { GroupStats } from '@/lib/stats'
 import { STAY_TIER_SHORT } from '@/lib/types'
 
 export interface TaskItem {
@@ -26,6 +29,7 @@ export function TripLocked({
   people,
   tasks,
   youId,
+  stats,
   organizerControls,
 }: {
   inviteCode: string
@@ -33,6 +37,7 @@ export function TripLocked({
   people: { id: string; name: string }[]
   tasks: TaskItem[]
   youId: string | null
+  stats: GroupStats
   organizerControls?: React.ReactNode
 }) {
   const summary = whatsappSummary(option, tasks, people)
@@ -81,6 +86,14 @@ export function TripLocked({
           <TaskList inviteCode={inviteCode} tasks={tasks} people={people} />
         </CardBody>
       </Card>
+
+      <AnswerStats stats={stats} />
+
+      <AvailabilityBoard
+        coverage={stats.coverage}
+        availability={stats.availability}
+        chosen={{ start: option.start, end: option.end }}
+      />
 
       <Card>
         <CardBody>

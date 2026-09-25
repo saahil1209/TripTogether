@@ -10,12 +10,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardBody } from '@/components/ui/card'
 import { Wordmark } from '@/components/wordmark'
 import { formatDate } from '@/lib/dates'
+import { groupStats } from '@/lib/stats'
 import { joinNames } from '@/lib/format'
 import type { TripOption } from '@/lib/recommendations'
 import type { ReactionValue } from '@/lib/schemas'
 import { currentParticipantId } from '@/lib/session'
 import {
-  loadTripByInvite, lockedOption, reactionsFrozen, recommendationFor,
+  loadTripByInvite, lockedOption, reactionsFrozen, recommendationFor, submittedResponses,
 } from '@/lib/trips'
 
 export const metadata = { title: 'Decide — TripTogether' }
@@ -63,6 +64,12 @@ export default async function DecidePage({ params }: { params: Promise<{ code: s
           option={locked}
           people={people}
           youId={participantId}
+          stats={groupStats(
+            submittedResponses(state),
+            participants.length,
+            trip.windowStart,
+            trip.windowEnd,
+          )}
           tasks={state.tasks.map((t) => ({
             id: t.id,
             label: t.label,

@@ -99,6 +99,8 @@ test('a group goes from an empty form to one locked decision', async ({ page, br
   await karan.page.goto(inviteUrl.replace('/join/', '/trip/') + '/results')
   await expect(karan.page.getByRole('heading', { name: 'Not ready yet' })).toBeVisible()
   await expect(karan.page.getByText('Best overall fit')).toHaveCount(0)
+  // Nobody's availability is visible before results are published.
+  await expect(karan.page.getByRole('heading', { name: 'When everyone could travel' })).toHaveCount(0)
 
   const aisha = await asNewPerson(browser)
   await answerAs(aisha.page, inviteUrl, 'Aisha', 'Pune', '35000')
@@ -176,6 +178,11 @@ test('a group goes from an empty form to one locked decision', async ({ page, br
   await expect(page.getByRole('heading', { name: /doing what/ })).toBeVisible()
   await expect(page.getByText('Book the stay', { exact: true })).toBeVisible()
   await expect(page.getByText("IT'S DECIDED 🎉")).toBeVisible()
+
+  // The answers only become public once the decision is made.
+  await expect(page.getByRole('heading', { name: 'By the numbers' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'When everyone could travel' })).toBeVisible()
+  await expect(page.getByText('Person by person')).toBeVisible()
 
   // Decisions stick: reactions are frozen for everyone else too.
   await karan.page.goto(decideUrl)
